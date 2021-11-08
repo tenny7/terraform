@@ -8,15 +8,6 @@ resource "azurerm_resource_group" "tfresourcegroup" {
   location = "West Europe"
 }
 
-# storage account of function app
-resource "azurerm_storage_account" "functionappstorage" {
-  name                     = "functionsappreprosa"
-  resource_group_name      = azurerm_resource_group.tfresourcegroup.name
-  location                 = azurerm_resource_group.tfresourcegroup.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-}
-
 # app service plan for function App
 resource "azurerm_app_service_plan" "myappserviceplan" {
   name                = "azure-functions-repro-service-plan"
@@ -35,8 +26,13 @@ resource "azurerm_function_app" "terrafuncrepro" {
   location                   = azurerm_resource_group.tfresourcegroup.location
   resource_group_name        = azurerm_resource_group.tfresourcegroup.name
   app_service_plan_id        = azurerm_app_service_plan.myappserviceplan.id
-  storage_account_name       = azurerm_storage_account.functionappstorage.name
-  storage_account_access_key = azurerm_storage_account.functionappstorage.primary_access_key
+  storage_account_name       = azurerm_storage_account.tfchisomstorage.name
+  storage_account_access_key = azurerm_storage_account.tfchisomstorage.primary_access_key
+
+   # dependency on function App storage being created for function App to work
+  depends_on = [
+    azurerm_storage_account.tfchisomstorage
+  ] 
 }
 
 # vnet for resources
@@ -54,6 +50,15 @@ resource "azurerm_subnet" "tfsubnet" {
   virtual_network_name = azurerm_virtual_network.tfvnet.name
   address_prefixes     = ["10.0.2.0/24"]
   service_endpoints    = ["Microsoft.Sql", "Microsoft.Storage"]
+
+  delegation {
+    name = "my-subnet-delegation"
+
+    service_delegation {
+      name    = "Microsoft.Web/serverFarms"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
+    }
+  }
 }
 
 # creating the storage account for the Vnet
@@ -75,8 +80,10 @@ resource "azurerm_storage_account" "tfchisomstorage" {
     environment = "staging"
   }
 
-  # dependency on function App storage being created for function App to work
-  depends_on = [
-    azurerm_storage_account.functionappstorage
-  ]
+
+}
+
+resource "azurerm_app_service_virtual_network_swift_connection" "swift_connection" {
+  app_service_id = azurerm_function_app.terrafuncrepro.id
+  subnet_id      = azurerm_subnet.tfsubnet.id
 }
