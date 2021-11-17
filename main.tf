@@ -72,13 +72,18 @@ resource "azurerm_storage_account" "tfchisomstorage" {
 
   network_rules {
     default_action             = "Deny"
-    ip_rules                   = ["100.0.0.1"]
     virtual_network_subnet_ids = [azurerm_subnet.tfsubnet.id]
+    bypass = [
+      "Metrics",
+      "Logging",
+      "AzureServices"
+    ]
   }
 
   tags = {
     environment = "staging"
   }
+
 
 
 }
