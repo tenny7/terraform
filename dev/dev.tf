@@ -14,7 +14,7 @@ resource "azurerm_app_service_plan" "asp" {
   }
 }
 
-resource "azurerm_app_service" "terraapp" {
+resource "azurerm_app_service" "appservice" {
   name                = var.azure_app_name
   location            = var.azure_rg_location
   resource_group_name = var.azure_rg_name
