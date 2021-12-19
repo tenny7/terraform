@@ -1,3 +1,9 @@
+provider "azurerm" {
+  tenant_id       = var.azure_tenant
+  subscription_id = var.azure_subscription
+  features {}
+}
+
 resource "azurerm_resource_group" "resourcegroup" {
   name     = var.azure_rg_name
   location = var.azure_rg_location
