@@ -1,6 +1,4 @@
 provider "azurerm" {
-  tenant_id       = var.azure_tenant
-  subscription_id = var.azure_subscription
   features {}
 }
 
