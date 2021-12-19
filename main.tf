@@ -52,9 +52,6 @@ resource "azurerm_function_app" "terrafuncrepro" {
   #   "WEBSITE_DNS_SERVER"                       = "168.63.129.16"
   # }
 
- 
-
- 
 }
 
 # vnet for resources
