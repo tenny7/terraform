@@ -18,12 +18,12 @@ variable "azure_asp_name" {
 
 variable "azure_asp_sku_tier" {
     type = string
-    default = "Free"
+    default = "Standard"
 }
 
 variable "azure_asp_sku_size" {
     type = string
-    default = "F1"
+    default = "S1"
 }
 
 
