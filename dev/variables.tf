@@ -13,7 +13,7 @@ variable "azure_rg_location" {
 # app service plan variables
 variable "azure_asp_name" {
     type = string
-    default = "terra-asp"
+    default = "terraf-asp"
 }
 
 variable "azure_asp_sku_tier" {
