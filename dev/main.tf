@@ -16,6 +16,10 @@ resource "azurerm_app_service_plan" "asp" {
     tier = var.azure_asp_sku_tier
     size = var.azure_asp_sku_size
   }
+
+  depends_on = [
+    azurerm_resource_group.resourcegroup
+  ]
 }
 
 resource "azurerm_app_service" "appservice" {
@@ -38,4 +42,8 @@ resource "azurerm_app_service" "appservice" {
     type  = var.app_conn_string_type
     value = var.app_conn_string_value
   }
+
+  depends_on = [
+    azurerm_app_service_plan.asp
+  ]
 }
