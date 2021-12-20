@@ -3,12 +3,7 @@ provider "azurerm" {
 }
 
 terraform {
-  backend "remote" {
-    organization = "cloud-tenn"
-
-    workspaces {
-      name = "my-app-prod"
-    }
+  backend "azurerm" {
   }
 }
 
