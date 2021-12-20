@@ -75,7 +75,7 @@ stages:
               scriptType: ps
               scriptLocation: inlineScript
               inlineScript: |
-                  az login
+                  az login --use-device-code
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: 'latest'
