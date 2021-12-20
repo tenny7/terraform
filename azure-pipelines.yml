@@ -10,6 +10,19 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
+  - stage: Build
+    displayName: Build App
+    jobs: 
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - script: |
+              dotnet run
+
+
+
   - stage: Provisioning
     displayName: 'Terraform Provisioning on Azure'
     dependsOn: Build
