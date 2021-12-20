@@ -115,10 +115,10 @@ stages:
             displayName: Plan Terraform Deployment
             env:
               ARM_SAS_TOKEN:   $(ARM_SAS_TOKEN)
-              ARM_CLIENT_ID:       $(CLIENT_ID)
-              ARM_CLIENT_SECRET:   $(CLIENT_SECRET)
-              ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION_ID) 
-              ARM_TENANT_ID:       $(TENANT_ID)
+              CLIENT_ID:       $(CLIENT_ID)
+              CLIENT_SECRET:   $(CLIENT_SECRET)
+              SUBSCRIPTION_ID: $(SUBSCRIPTION_ID) 
+              TENANT_ID:       $(TENANT_ID)
             inputs:
               command: 'plan'
               workingDirectory: '$(System.DefaultWorkingDirectory)'
