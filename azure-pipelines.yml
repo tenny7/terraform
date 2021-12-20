@@ -95,10 +95,10 @@ stages:
             name: 'RunTerraform'
             displayName: 'Run Terraform'
             env:
-              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-              ARM_TENANT_ID: $(ARM_TENANT_ID)
-              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+              CLIENT_ID: $(CLIENT_ID)
+              CLIENT_SECRET: $(CLIENT_SECRET)
+              TENANT_ID: $(TENANT_ID)
+              SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
 
               
             
