@@ -111,6 +111,8 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)'
               commandOptions: '-backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
               backendType: 'selfConfigured'
+          
+              
 
           - task: TerraformCLI@0
             displayName: Plan Terraform Deployment
