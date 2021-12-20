@@ -110,7 +110,7 @@ stages:
                 export CLIENT_ID=$(CLIENT_ID)
                 export CLIENT_SECRET=$(CLIENT_SECRET)
                 export TENANT_ID=$(TENANT_ID)
-                terraform init
+                terraform init -reconfigure
            
           - bash: terraform apply -auto-approve 
             displayName: Terraform Apply
