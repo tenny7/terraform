@@ -7,7 +7,10 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
+
+variables:
+ buildConfiguration: 'Release'
 
 stages:
   - stage: Build
@@ -20,6 +23,31 @@ stages:
         steps:
           - script: |
               dotnet run
+          - task: DotNetCoreCLI@2
+            inputs:
+              command: 'restore'
+              feedsToUse: 'select'
+              vstsFeed: 'my-vsts-feed'
+          - task: DotNetCoreCLI@2
+            inputs:
+              command: 'build'
+              projects: '**/*.csproj'
+              arguments: '--configuration $(buildConfiguration)'
+            displayName: 'dotnet build $(buildConfiguration)'
+              
+          - task: DotNetCoreCLI@2
+            inputs:
+              command: 'publish'
+              publishWebProjects: true
+              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+              zipAfterPublish: True
+              
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: '$(Pipeline.Workspace)'
+              artifact: 'TerraApp'
+              publishLocation: 'pipeline'
+          
 
 
 
