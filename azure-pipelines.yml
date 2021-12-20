@@ -82,6 +82,14 @@ stages:
               StorageAccountResourceGroup: 'terra-state-stor-rg'
               StorageAccountRM: 'terrastorr'
               StorageContainerName: 'terracontainer'
+            name: 'Init'
+            displayName: 'Terraform Init'
+            env:
+              CLIENT_ID: $(CLIENT_ID)
+              CLIENT_SECRET: $(CLIENT_SECRET)
+              TENANT_ID: $(TENANT_ID)
+              SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+
           - task: Terraform@2
             inputs:
               TemplatePath: '$(System.DefaultWorkingDirectory)'
@@ -96,8 +104,8 @@ stages:
               StorageAccountRM: 'terrastorr'
               StorageContainerName: 'terracontainer'
 
-            name: 'RunTerraform'
-            displayName: 'Run Terraform'
+            name: 'Apply'
+            displayName: 'Terraform Apply'
             env:
               CLIENT_ID: $(CLIENT_ID)
               CLIENT_SECRET: $(CLIENT_SECRET)
