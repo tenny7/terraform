@@ -72,7 +72,7 @@ stages:
               InstallTerraform: true
               UseAzureSub: true
               ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-              ConnectedServiceNameARM: $(SubscriptionName)
+              ConnectedServiceNameARM: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
               ManageState: true
               SpecifyStorageAccount: true
               StorageAccountResourceGroup: 'terra-state-stor-rg'
@@ -85,7 +85,7 @@ stages:
               InstallTerraform: true
               UseAzureSub: true
               ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-              ConnectedServiceNameARM: $(SubscriptionName)
+              ConnectedServiceNameARM: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
               ManageState: true
               SpecifyStorageAccount: true
               StorageAccountResourceGroup: 'terra-state-stor-rg'
