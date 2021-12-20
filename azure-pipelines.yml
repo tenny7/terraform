@@ -118,7 +118,7 @@ stages:
               azureSubscription: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
-              inlineScript: 'az login --identity-$(MSI)'
+              inlineScript: 'az login --identity --username $(MSI)'
 
           - task: TerraformCLI@0
             displayName: Plan Terraform Deployment
