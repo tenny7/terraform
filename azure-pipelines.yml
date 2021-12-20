@@ -68,6 +68,7 @@ stages:
         variables:
           - group: TerraformEnvVariables
         steps:
+          - checkout: self
           - task: TerraformCLI@0
             inputs:
               command: 'init'
