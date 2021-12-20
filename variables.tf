@@ -1,7 +1,7 @@
 # resource group variables
 variable "azure_rg_name" {
     type = string
-    default = "dev_weu_rg"
+    default = "devv_weu_rg"
 }
 
 variable "azure_rg_location" {
