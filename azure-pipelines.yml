@@ -68,45 +68,26 @@ stages:
         variables:
           - group: TerraformEnvVariables
         steps:
-          
-          - task: Terraform@2
+          - task: TerraformCLI@0
             inputs:
-              TemplatePath: '$(System.DefaultWorkingDirectory)'
-              Arguments: 'init -reconfigure |
-                               -backend-config="subscription_id=$(SUBSCRIPTION_ID)" |
-                               -backend-config="tenant_id=$(TENANT_ID)" |
-                               -backend-config="client_id=$(CLIENT_ID)" |
-                               -backend-config="client_secret=$(CLIENT_SECRET)" '
-              InstallTerraform: true
-              UseAzureSub: true
-              ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-              ConnectedServiceNameARM: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
-              ManageState: true
-              SpecifyStorageAccount: true
-              StorageAccountResourceGroup: 'terra-state-stor-rg'
-              StorageAccountRM: 'terrastorr'
-              StorageContainerName: 'terracontainer'
-            name: 'Init'
-            displayName: 'Terraform Init'
-            env:
-              CLIENT_ID: $(CLIENT_ID)
-              CLIENT_SECRET: $(CLIENT_SECRET)
-              TENANT_ID: $(TENANT_ID)
-              SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+              command: 'init'
+              commandOptions: '-reconfigure -input=false'
+              backendType: 'azurerm'
+              backendServiceArm: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
+              backendAzureRmResourceGroupName: 'terra-state-stor-rg'
+              backendAzureRmStorageAccountName: 'terrastorr'
+              backendAzureRmContainerName: 'terracontainer'
+              backendAzureRmKey: 'terraform.tfstate'
+              allowTelemetryCollection: true
 
-          - task: Terraform@2
+          - task: TerraformCLI@0
             inputs:
-              TemplatePath: '$(System.DefaultWorkingDirectory)'
-              Arguments: 'apply -auto-approve'
-              InstallTerraform: true
-              UseAzureSub: true
-              ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-              ConnectedServiceNameARM: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
-              ManageState: true
-              SpecifyStorageAccount: true
-              StorageAccountResourceGroup: 'terra-state-stor-rg'
-              StorageAccountRM: 'terrastorr'
-              StorageContainerName: 'terracontainer'
+              command: 'apply'
+              environmentServiceName: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
+              commandOptions: '-auto-approve'
+              allowTelemetryCollection: true
+            
+          
 
             name: 'Apply'
             displayName: 'Terraform Apply'
