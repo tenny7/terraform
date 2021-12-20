@@ -68,7 +68,7 @@ stages:
           - task: Terraform@2
             inputs:
               TemplatePath: '$(System.DefaultWorkingDirectory)'
-              Arguments: 'init'
+              Arguments: 'init -reconfigure'
               InstallTerraform: true
               UseAzureSub: true
               ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
