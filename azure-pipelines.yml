@@ -13,7 +13,7 @@ resources:
   - repo: self
   
 variables:
- buildConfiguration: 'Release'
+  - group: TerraformEnvVariables
 
 stages:
   - stage: Build
@@ -22,7 +22,7 @@ stages:
       - job: Build
         displayName: Build
         pool:
-          vmImage: 'windows-latest'
+          vmImage: 'ubuntu-latest'
         
         steps:
           - task: UseDotNet@2
@@ -41,14 +41,14 @@ stages:
             inputs:
               command: 'build'
               projects: '**/*.csproj'
-              arguments: '--configuration $(buildConfiguration)'
-            displayName: 'dotnet build $(buildConfiguration)'
+              arguments: '--configuration Release'
+            displayName: 'dotnet build Release'
               
           - task: DotNetCoreCLI@2
             inputs:
               command: 'publish'
               publishWebProjects: true
-              arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+              arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
               zipAfterPublish: True
               
           - task: PublishPipelineArtifact@1
@@ -56,76 +56,105 @@ stages:
               targetPath: '$(Pipeline.Workspace)'
               artifact: 'TerraApp'
               publishLocation: 'pipeline'
-        variables:
-          - group: TerraformEnvVariables
+        
   - stage:
     displayName: Provision
     jobs:
       - job:
         displayName: Provision
         pool:
-            vmImage: 'windows-latest'
+            vmImage: 'ubuntu-latest'
         steps:
-          - task: AzureCLI@2
-            inputs:
-              azureSubscription: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
-              scriptType: 'pscore'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                Write-Host "##vso[task.setvariable variable=CLIENT_ID]$($env:servicePrincipalId)"
-                
-                Write-Host "##vso[task.setvariable variable=CLIENT_SECRET]$($env:servicePrincipalKey)"
-                
-                Write-Host "##vso[task.setvariable variable=TENANT_ID]$($env:tenantId)"
-              addSpnToEnvironment: true
-              useGlobalConfig: true
-          - task: AzurePowerShell@5
-            inputs:
-              azureSubscription: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
-              ScriptType: 'InlineScript'
-              Inline: |
-                $username = "$(CLIENT_ID)"
-                $password = "$(CLIENT_SECRET)"
-                $tenantId = "$(TENANT_ID)"
-                
-                az login --service-principal --username  $username --password $password --tenant $tenantId
-              preferredAzurePowerShellVersion: '3.1.0'
-          
-          
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: 'latest'
-              downloadUrl: 'https://releases.hashicorp.com/terraform/1.1.2/terraform_1.1.2_windows_amd64.zip'
-          
-          - task: AzureCLI@2
-            displayName: "Terraform"
+    # init
+          - task: TerraformCLI@0
+            displayName: Initialize Terraform
+            env:
+              ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
             inputs:
-              azureSubscription:  'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
-              scriptType: bash
-              addSpnToEnvironment: true
-              scriptLocation: inlineScript
-              inlineScript: |
-                export CLIENT_ID=$(CLIENT_ID)
-                export CLIENT_SECRET=$(CLIENT_SECRET)
-                export TENANT_ID=$(TENANT_ID)
-                terraform init -reconfigure \
-                -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME" \
-                -backend-config="container_name=$CONTAINER_NAME" \
-                -backend-config="key=$KEY" \
-                -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"
+              command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
+              commandOptions: 'backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
+              backendType: 'selfConfigured'
+  - stage: Plan
+    displayName: Plan
+    jobs:
+      - job: plan
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: TerraformInstaller@0
+            inputs:
+              terraformVersion: 'latest'
+          - task: TerraformCLI@0
+            displayName: Initialize Terraform
             env:
-              STORAGE_ACCOUNT_NAME: $(STORAGE_ACCOUNT_NAME)
-              CONTAINER_NAME:       $(CONTAINER_NAME)
-              KEY:   $(KEY)
-              RESOURCE_GROUP_NAME:       $(RESOURCE_GROUP_NAME)  
-           
-          - bash: terraform apply -auto-approve 
-            displayName: Terraform Apply
+              ARM_SAS_TOKEN: $(sas_token)
+            inputs:
+              command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
+              commandOptions: 'backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
+              backendType: 'selfConfigured'
+          - task: TerraformCLI@0
+            displayName: Plan Terrafirm Deployment
             env:
+              ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
               SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
               CLIENT_ID:       $(CLIENT_ID)
               CLIENT_SECRET:   $(CLIENT_SECRET)
-              TENANT_ID:       $(TENANT_ID)      
+              TENANT_ID:       $(TENANT_ID)
+            inputs:
+              command: 'plan'
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
+  - stage: Approve
+    displayName: Approve
+    jobs: 
+      - job: approve
+        displayName: Wait for approval
+        pool: server
+        steps:
+          - task: ManualValidation@0
+            timeoutInMinutes: 60
+            inputs:
+              notifyUsers: 'ovie.tennyson@outlook.com'
+              instructions: 'Review the planin the next hour'
+
+  - stage: Apply
+    displayName: Apply
+    jobs:
+      - job: apply
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: TerraformInstaller@0
+            inputs:
+              terraformVersion: 'latest'
+          - task: TerraformCLI@0
+            displayName: Initialize Terraform
+            env:
+              ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
+            inputs:
+              command: 'init'
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
+              commandOptions: 'backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
+              backendType: 'selfConfigured'
+          - task: TerraformCLI@0
+            displayName: Apply Terrafirm Deployment
+            env:
+              ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
+              SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+              CLIENT_ID:       $(CLIENT_ID)
+              CLIENT_SECRET:   $(CLIENT_SECRET)
+              TENANT_ID:       $(TENANT_ID)
+            inputs:
+              command: 'apply'
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
+              commandOptions: '-auto-approve'
+            
+
+              
           
   
               
