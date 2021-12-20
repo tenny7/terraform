@@ -54,9 +54,6 @@ stages:
               artifact: 'TerraApp'
               publishLocation: 'pipeline'
           
-
-
-
   - stage: Provisioning
     displayName: 'Terraform Provisioning on Azure'
     dependsOn: Build
@@ -64,15 +61,27 @@ stages:
       - job: Provision
         displayName: 'Provisioning App services'
         pool:
-          vmImage: 'ubuntu-latest'
+          vmImage: 'windows-latest'
         variables:
           - group: TerraformEnvVar
         steps:
-          - script: |
-              set -e 
-
-              terraform -init -input=false
-              terraform apply -input=false -auto-approve
+          # - script: |
+          - task: Terraform@2
+            inputs:
+              TemplatePath: 'System.DefaultWorkingDirectory'
+              Arguments: 'init'
+              InstallTerraform: true
+              UseAzureSub: true
+              ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
+              ConnectedServiceNameARM: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
+              ManageState: true
+              SpecifyStorageAccount: true
+              StorageAccountResourceGroup: 'terra-state-stor-rg'
+              StorageAccountRM: 'terrastorr'
+              StorageContainerName: 'terracontainer'
+          #     set -e 
+          #     terraform -init -input=false
+          #     terraform apply -input=false -auto-approve
             name: 'RunTerraform'
             displayName: 'Run Terraform'
             env:
