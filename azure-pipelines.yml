@@ -119,6 +119,7 @@ stages:
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: 'az login --identity --username $(MSI)'
+          
 
           - task: TerraformCLI@0
             displayName: Plan Terraform Deployment
