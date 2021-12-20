@@ -68,6 +68,19 @@ stages:
         variables:
           - group: TerraformEnvVariables
         steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
+              scriptType: 'pscore'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                Write-Host "##vso[task.setvariable variable=CLIENT_ID]$($env:servicePrincipalId)"
+                
+                Write-Host "##vso[task.setvariable variable=CLIENT_SECRET]$($env:servicePrincipalKey)"
+                
+                Write-Host "##vso[task.setvariable variable=TENANT_ID]$($env:tenantId)"
+              addSpnToEnvironment: true
+              useGlobalConfig: true
           - task: AzurePowerShell@5
             inputs:
               azureSubscription: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
@@ -78,7 +91,7 @@ stages:
                 $tenantId = "$(TENANT_ID)"
                  
                 az login --service-principal --username  $username --password $password --tenant $tenantId
-              preferredAzurePowerShellVersion: '5.*'
+              preferredAzurePowerShellVersion: '3.1.0'
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: 'latest'
