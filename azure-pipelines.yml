@@ -68,19 +68,17 @@ stages:
         variables:
           - group: TerraformEnvVariables
         steps:
-          - task: AzureCLI@2
-            displayName: Azure CLI
+          - task: AzurePowerShell@5
             inputs:
-              azureSubscription: Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)
-              scriptType: ps
-              scriptLocation: inlineScript
-              inlineScript: |
-                  $username = "$(CLIENT_ID)"
-                  $password = "$(CLIENT_SECRET)"
-                  $tenantId = "$(TENANT_ID)"
-                  
-                  az login --service-principal --username  $username --password $password --tenant $tenantId
-                  az login --use-device-code
+              azureSubscription: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
+              ScriptType: 'InlineScript'
+              Inline: |
+                $username = "$(CLIENT_ID)"
+                $password = "$(CLIENT_SECRET)"
+                $tenantId = "$(TENANT_ID)"
+                 
+                az login --service-principal --username  $username --password $password --tenant $tenantId
+              preferredAzurePowerShellVersion: '5.*'
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: 'latest'
