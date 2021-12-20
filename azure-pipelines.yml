@@ -72,7 +72,7 @@ stages:
               InstallTerraform: true
               UseAzureSub: true
               ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-              ConnectedServiceNameARM: '$(SubscriptionName)'
+              ConnectedServiceNameARM: $(SubscriptionName)
               ManageState: true
               SpecifyStorageAccount: true
               StorageAccountResourceGroup: 'terra-state-stor-rg'
@@ -85,7 +85,7 @@ stages:
               InstallTerraform: true
               UseAzureSub: true
               ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-              ConnectedServiceNameARM: '$(SubscriptionName)'
+              ConnectedServiceNameARM: $(SubscriptionName)
               ManageState: true
               SpecifyStorageAccount: true
               StorageAccountResourceGroup: 'terra-state-stor-rg'
