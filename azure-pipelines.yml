@@ -92,24 +92,26 @@ stages:
                 
                 az login --service-principal --username  $username --password $password --tenant $tenantId
               preferredAzurePowerShellVersion: '3.1.0'
+          
+          
           - task: TerraformInstaller@0
             inputs:
               terraformVersion: 'latest'
               downloadUrl: 'https://releases.hashicorp.com/terraform/1.1.2/terraform_1.1.2_windows_amd64.zip'
-          - bash: |
-              terraform init \
-                -backend-config="storage_account_name=$TF_STATE_BLOB_ACCOUNT_NAME" \
-                -backend-config="container_name=$TF_STATE_BLOB_CONTAINER_NAME" \
-                -backend-config="key=$TF_STATE_BLOB_FILE" \
-                -backend-config="resource_group_name=$(TF_STATE_RESOURCE_GROUP_NAME)"
-            displayName: Terraform Init
-            env:
-              TF_STATE_BLOB_ACCOUNT_NAME: $(TF_STATE_BLOB_ACCOUNT_NAME)
-              TF_STATE_BLOB_CONTAINER_NAME: $(TF_STATE_BLOB_CONTAINER_NAME)
-              TF_STATE_BLOB_FILE: $(TF_STATE_BLOB_FILE)
-              TF_STATE_RESOURCE_GROUP_NAME: $(TF_STATE_RESOURCE_GROUP_NAME)
+          
+          - task: AzureCLI@2
+            displayName: "Terraform"
+            inputs:
+              azureSubscription:  'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
+              scriptType: bash
+              addSpnToEnvironment: true
+              scriptLocation: inlineScript
+              inlineScript: |
+                export CLIENT_ID=$(CLIENT_ID)
+                export CLIENT_SECRET=$(CLIENT_SECRET)
+                export TENANT_ID=$(TENANT_ID)
+                terraform init
            
-
           - bash: terraform apply -auto-approve 
             displayName: Terraform Apply
             env:
