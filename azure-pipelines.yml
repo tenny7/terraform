@@ -70,19 +70,12 @@ stages:
               terraformVersion: 'latest'
     # init
           
-          - task: Bash@3
+          - bash: terraform init -reconfigure
             displayName: Bash Command
-            inputs:
-              targetType: inline
-              script: terraform init -reconfigure \
-                      -backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) \
-                      -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)
             env:
-              ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
-              
-
-              
-            
+               ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
+            workingDirectory: '$(System.DefaultWorkingDirectory)' 
+                      
   - stage: Plan
     displayName: Plan
     jobs:
