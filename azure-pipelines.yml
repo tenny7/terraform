@@ -75,6 +75,11 @@ stages:
               scriptType: ps
               scriptLocation: inlineScript
               inlineScript: |
+                  $username = "$(CLIENT_ID)"
+                  $password = "$(CLIENT_SECRET)"
+                  $tenantId = "$(TENANT_ID)"
+                  
+                  az login --service-principal --username  $username --password $password --tenant $tenantId
                   az login --use-device-code
           - task: TerraformInstaller@0
             inputs:
