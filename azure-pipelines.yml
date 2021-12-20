@@ -1,0 +1,38 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: Provisioning
+    displayName: 'Terraform Provisioning on Azure'
+    dependsOn: Build
+    jobs:
+      - job: Provision
+        displayName: 'Provisioning App services'
+        pool:
+          vmImage: 'ubuntu-latest'
+        variables:
+          - group: TerraformEnvVar
+        steps:
+          - script: |
+              set -e 
+
+              terraform -init -input=false
+              terraform apply -input=false -auto-approve
+            name: 'RunTerraform'
+            displayName: 'Run Terraform'
+            env:
+              ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+              ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+              ARM_TENANT_ID: $(ARM_TENANT_ID)
+              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+
+              
+            
