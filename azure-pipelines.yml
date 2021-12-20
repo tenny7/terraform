@@ -68,6 +68,10 @@ stages:
         variables:
           - group: TerraformEnvVariables
         steps:
+          - task: TerraformInstaller@0
+            inputs:
+              terraformVersion: 'latest'
+              downloadUrl: 'https://releases.hashicorp.com/terraform/1.1.2/terraform_1.1.2_windows_amd64.zip'
           - bash: |
               terraform init \
                 -backend-config="storage_account_name=$TF_STATE_BLOB_ACCOUNT_NAME" \
