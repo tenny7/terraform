@@ -4,10 +4,6 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    resource_group_name   = "terra-state-stor-rg"
-    storage_account_name  = "terrastorr"
-    container_name        = "terracontainer"
-    key                   = "terraform.tfstate"
   }
 }
 
