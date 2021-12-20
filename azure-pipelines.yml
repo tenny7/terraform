@@ -65,7 +65,6 @@ stages:
         variables:
           - group: TerraformEnvVar
         steps:
-          # - script: |
           - task: Terraform@2
             inputs:
               TemplatePath: '$(System.DefaultWorkingDirectory)'
@@ -92,7 +91,7 @@ stages:
               StorageAccountResourceGroup: 'terra-state-stor-rg'
               StorageAccountRM: 'terrastorr'
               StorageContainerName: 'terracontainer'
-              
+
             name: 'RunTerraform'
             displayName: 'Run Terraform'
             env:
