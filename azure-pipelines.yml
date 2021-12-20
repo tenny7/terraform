@@ -22,7 +22,7 @@ stages:
       - job: Build
         displayName: Build
         pool:
-          vmImage: 'ubuntu-latest'
+          vmImage: 'windows-latest'
         
         steps:
           - task: UseDotNet@2
@@ -64,7 +64,7 @@ stages:
       - job:
         displayName: Provision
         pool:
-            vmImage: 'ubuntu-latest'
+            vmImage: 'windows-latest'
         steps:
           - task: AzureCLI@2
             inputs:
