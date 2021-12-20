@@ -33,33 +33,6 @@ variable "azure_app_name" {
     default = "terra-dev-app-01"
 }
 
-variable "site_config_dotnet_ver" {
-    type = string
-    default = "v4.0"
-}
 
-variable "site_config_scm_type" {
-    type = string
-    default = "LocalGit"
-}
 
-variable "app_settings_value" {
-    type = string
-    default = "some-value"
-}
-
-variable "app_conn_string_name" {
-    type = string
-    default = "Database"
-}
-
-variable "app_conn_string_type" {
-    type = string
-    default = "SQLServer"
-}
-
-variable "app_conn_string_value" {
-    type = string
-    default = "Server=some-server.mydomain.com;Integrated Security=SSPI"
-}
 

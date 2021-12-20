@@ -3,10 +3,14 @@ provider "azurerm" {
 }
 
 terraform {
-  backend "azurerm" {
+  backend "remote" {
+    organization = "cloud-tenn"
+
+    workspaces {
+      name = "my-app-prod"
+    }
   }
 }
-
 
 resource "azurerm_resource_group" "resourcegroup" {
   name     = var.azure_rg_name
@@ -38,6 +42,4 @@ resource "azurerm_app_service" "appservice" {
   depends_on = [
     azurerm_app_service_plan.asp
   ]
-
-
 }
