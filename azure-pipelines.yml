@@ -63,7 +63,7 @@ stages:
         pool:
           vmImage: 'windows-latest'
         variables:
-          - group: TerraformEnvVar
+          - group: TerraformEnvVariables
         steps:
           - task: TerraformCLI@0
             inputs:
