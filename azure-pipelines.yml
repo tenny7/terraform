@@ -56,7 +56,7 @@ stages:
               targetPath: '$(Pipeline.Workspace)'
               artifact: 'TerraApp'
               publishLocation: 'pipeline'
-          variables:
+        variables:
           - group: TerraformEnvVariables
   - stage:
     displayName: Provision
