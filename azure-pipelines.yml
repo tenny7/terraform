@@ -57,60 +57,6 @@ stages:
               artifact: 'TerraApp'
               publishLocation: 'pipeline'
           
-  - stage: Provisioning
-    displayName: 'Terraform Provisioning on Azure'
-    dependsOn: Build
-    jobs:
-      - job: Provision
-        displayName: 'Provisioning App services'
-        pool:
-          vmImage: 'windows-latest'
-        variables:
-          - group: TerraformEnvVariables
-        steps:
-          
-          - task: Terraform@2
-            inputs:
-              TemplatePath: '$(System.DefaultWorkingDirectory)'
-              Arguments: 'init -reconfigure'
-              InstallTerraform: true
-              UseAzureSub: true
-              ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-              ConnectedServiceNameARM: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
-              ManageState: true
-              SpecifyStorageAccount: true
-              StorageAccountResourceGroup: 'terra-state-stor-rg'
-              StorageAccountRM: 'terrastorr'
-              StorageContainerName: 'terracontainer'
-            name: 'Init'
-            displayName: 'Terraform Init'
-            env:
-              client_id: $(client_id)
-              client_secret: $(client_secret)
-              tenant_id: $(tenant_id)
-              subscription_id: $(subscription_id)
-
-          - task: Terraform@2
-            inputs:
-              TemplatePath: '$(System.DefaultWorkingDirectory)'
-              Arguments: 'apply -auto-approve'
-              InstallTerraform: true
-              UseAzureSub: true
-              ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-              ConnectedServiceNameARM: 'Visual Studio Enterprise Subscription (795e5dad-6e94-41f8-af43-4321cd00cc8b)'
-              ManageState: true
-              SpecifyStorageAccount: true
-              StorageAccountResourceGroup: 'terra-state-stor-rg'
-              StorageAccountRM: 'terrastorr'
-              StorageContainerName: 'terracontainer'
-
-            name: 'Apply'
-            displayName: 'Terraform Apply'
-            env:
-              client_id: $(client_id)
-              client_secret: $(client_secret)
-              tenant_id: $(tenant_id)
-              subscription_id: $(subscription_id)
-
+  
               
             
