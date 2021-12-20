@@ -89,7 +89,7 @@ stages:
                 $username = "$(CLIENT_ID)"
                 $password = "$(CLIENT_SECRET)"
                 $tenantId = "$(TENANT_ID)"
-                 
+                
                 az login --service-principal --username  $username --password $password --tenant $tenantId
               preferredAzurePowerShellVersion: '3.1.0'
           - task: TerraformInstaller@0
