@@ -69,12 +69,24 @@ stages:
             inputs:
               terraformVersion: 'latest'
     # init
+          # Bash
+          # Run a Bash script on macOS, Linux, or Windows
+          - task: Bash@3
+            inputs:
+              targetType:  'inline'
+              #filePath: # Required when targetType == FilePath
+              arguments: 
+              script: 'terraform init -reconfigure' # Required when targetType == inline
+              workingDirectory: '$(System.DefaultWorkingDirectory)' 
+              #failOnStderr: false # Optional
+              #noProfile: true # Optional
+              #noRc: true # Optional  
           
-          - bash: terraform init -reconfigure
-            displayName: Bash Command
-            env:
-               ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
-            workingDirectory: '$(System.DefaultWorkingDirectory)' 
+          # - bash: terraform init 
+          #   displayName: Bash Command
+          #   env:
+          #      ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
+          #   workingDirectory: '$(System.DefaultWorkingDirectory)' 
                       
   - stage: Plan
     displayName: Plan
