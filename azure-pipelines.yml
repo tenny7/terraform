@@ -109,10 +109,15 @@ stages:
                 export CLIENT_SECRET=$(CLIENT_SECRET)
                 export TENANT_ID=$(TENANT_ID)
                 terraform init -reconfigure \
-                -backend-config="storage_account_name=$(TF_STATE_BLOB_ACCOUNT_NAME)" \
-                -backend-config="container_name=$(TF_STATE_BLOB_CONTAINER_NAME)" \
-                -backend-config="key=$(TF_STATE_BLOB_FILE)" \
-                -backend-config="resource_group_name=$(TF_STATE_RESOURCE_GROUP_NAME)"
+                -backend-config="storage_account_name=$STORAGE_ACCOUNT_NAME" \
+                -backend-config="container_name=$CONTAINER_NAME" \
+                -backend-config="key=$KEY" \
+                -backend-config="resource_group_name=$RESOURCE_GROUP_NAME"
+            env:
+              STORAGE_ACCOUNT_NAME: $(STORAGE_ACCOUNT_NAME)
+              CONTAINER_NAME:       $(CONTAINER_NAME)
+              KEY:   $(KEY)
+              RESOURCE_GROUP_NAME:       $(RESOURCE_GROUP_NAME)  
            
           - bash: terraform apply -auto-approve 
             displayName: Terraform Apply
