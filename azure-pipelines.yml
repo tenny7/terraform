@@ -72,7 +72,11 @@ stages:
           - task: Terraform@2
             inputs:
               TemplatePath: '$(System.DefaultWorkingDirectory)'
-              Arguments: 'init -reconfigure'
+              Arguments: 'init -reconfigure |
+                               -backend-config="subscription_id=$(SUBSCRIPTION_ID)" |
+                               -backend-config="tenant_id=$(TENANT_ID)" |
+                               -backend-config="client_id=$(CLIENT_ID)" |
+                               -backend-config="client_secret=$(CLIENT_SECRET)" '
               InstallTerraform: true
               UseAzureSub: true
               ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
