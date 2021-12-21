@@ -111,6 +111,16 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)'
               commandOptions: '-backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
               backendType: 'selfConfigured'
+          
+          - bash: terraform plan
+            displayName: Terraform Plan
+            env:
+              ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
+              SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+              CLIENT_ID:       $(CLIENT_ID)
+              CLIENT_SECRET:   $(CLIENT_SECRET)
+              TENANT_ID:       $(TENANT_ID)
+
           - task: Terraform@2
             inputs:
               TemplatePath: $(System.DefaultWorkingDirectory)
@@ -125,20 +135,20 @@ stages:
               StorageAccountRM: 'terrastorr'
               StorageContainerName: 'terracontainer'
             env:
-              ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
-              SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
-              CLIENT_ID:       $(CLIENT_ID)
-              CLIENT_SECRET:   $(CLIENT_SECRET)
-              TENANT_ID:       $(TENANT_ID)
-          - task: TerraformCLI@0
-            displayName: Plan Terraform
-            env:
-              ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
-            inputs:
-              command: 'plan'
-              workingDirectory: '$(System.DefaultWorkingDirectory)'
-              # commandOptions: '-backend-config=arm_subscription_id=$(SUBSCRIPTION_ID) -backend-config=arm_client_id=$(CLIENT_ID) -backend-config=arm_client_secret=$(CLIENT_SECRET) -backend-config=arm_tenant_id=$(TENANT_ID)'
-              backendType: 'selfConfigured'
+              ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+              ARM_CLIENT_ID:       $(CLIENT_ID)
+              ARM_CLIENT_SECRET:   $(CLIENT_SECRET)
+              ARM_TENANT_ID:       $(TENANT_ID)
+              
+          # - task: TerraformCLI@0
+          #   displayName: Plan Terraform
+          #   env:
+          #     ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
+          #   inputs:
+          #     command: 'plan'
+          #     workingDirectory: '$(System.DefaultWorkingDirectory)'
+          #     # commandOptions: '-backend-config=arm_subscription_id=$(SUBSCRIPTION_ID) -backend-config=arm_client_id=$(CLIENT_ID) -backend-config=arm_client_secret=$(CLIENT_SECRET) -backend-config=arm_tenant_id=$(TENANT_ID)'
+          #     backendType: 'selfConfigured'
           
 
       
