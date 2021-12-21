@@ -112,16 +112,11 @@ stages:
               commandOptions: '-backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
               backendType: 'selfConfigured'
           
-          - bash: export ARM_USE_MSI=true ARM_TENANT_ID=$(TENANT_ID)
+          - bash: export ARM_USE_MSI=true ARM_TENANT_ID=$(TENANT_ID)|
+                  az login --identity --username $(MSI)
+                  terraform plan
+            displayName: MSI and Terraform plan
           
-          - bash: terraform plan 
-            displayName: Terraform Plan
-            env:
-              ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
-              ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
-              ARM_CLIENT_ID:       $(CLIENT_ID)
-              ARM_CLIENT_SECRET:   $(CLIENT_SECRET)
-              ARM_TENANT_ID:       $(TENANT_ID)
 
 
           # - task: Terraform@2
