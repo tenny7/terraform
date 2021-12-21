@@ -115,7 +115,7 @@ stages:
           - task: AzureCLI@2
             displayName: Authenticate Azure Account
             inputs:
-              azureSubscription: 'MyAzureMSIServiceConnection'
+              azureSubscription: 'MyServicePrincipleConn'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: 'az login --identity --username $(MSI)'
