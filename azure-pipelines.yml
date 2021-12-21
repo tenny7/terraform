@@ -124,6 +124,12 @@ stages:
               StorageAccountResourceGroup: 'terra-state-stor-rg'
               StorageAccountRM: 'terrastorr'
               StorageContainerName: 'terracontainer'
+            env:
+              ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
+              SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+              CLIENT_ID:       $(CLIENT_ID)
+              CLIENT_SECRET:   $(CLIENT_SECRET)
+              TENANT_ID:       $(TENANT_ID)
           
 
       
