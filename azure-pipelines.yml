@@ -130,6 +130,15 @@ stages:
               CLIENT_ID:       $(CLIENT_ID)
               CLIENT_SECRET:   $(CLIENT_SECRET)
               TENANT_ID:       $(TENANT_ID)
+          - task: TerraformCLI@0
+            displayName: Plan Terraform
+            env:
+              ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
+            inputs:
+              command: 'plan'
+              workingDirectory: '$(System.DefaultWorkingDirectory)'
+              # commandOptions: '-backend-config=arm_subscription_id=$(SUBSCRIPTION_ID) -backend-config=arm_client_id=$(CLIENT_ID) -backend-config=arm_client_secret=$(CLIENT_SECRET) -backend-config=arm_tenant_id=$(TENANT_ID)'
+              backendType: 'selfConfigured'
           
 
       
