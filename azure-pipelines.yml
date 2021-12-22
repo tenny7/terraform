@@ -7,7 +7,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 resources:
   - repo: self
@@ -22,7 +22,7 @@ stages:
       - job: Build
         displayName: Build
         pool:
-          vmImage: 'windows-latest'
+          vmImage: 'ubuntu-latest'
         
         steps:
           - task: UseDotNet@2
@@ -63,7 +63,7 @@ stages:
       - job:
         displayName: Provision
         pool:
-            vmImage: 'windows-latest'
+            vmImage: 'ubuntu-latest'
         steps:
           - task: TerraformInstaller@0
             inputs:
@@ -84,10 +84,10 @@ stages:
             displayName: Init Terraform Deployment
             env:
               ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
-              SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
-              CLIENT_ID:       $(CLIENT_ID)
-              CLIENT_SECRET:   $(CLIENT_SECRET)
-              TENANT_ID:       $(TENANT_ID)
+              ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+              ARM_CLIENT_ID:       $(CLIENT_ID)
+              ARM_CLIENT_SECRET:   $(CLIENT_SECRET)
+              ARM_TENANT_ID:       $(TENANT_ID)
      
                       
   - stage: Plan
@@ -95,7 +95,7 @@ stages:
     jobs:
       - job: plan
         pool:
-          vmImage: 'windows-latest'
+          vmImage: 'ubuntu-latest'
         steps:
           - task: TerraformInstaller@0
             inputs:
@@ -110,25 +110,56 @@ stages:
               workingDirectory: '$(System.DefaultWorkingDirectory)'
               commandOptions: '-backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
               backendType: 'selfConfigured'
-          - task: Terraform@2
+          
+          - task: AzureCLI@2
             inputs:
-              TemplatePath: $(System.DefaultWorkingDirectory)
-              Arguments: 'plan'
-              InstallTerraform: true
-              UseAzureSub: true
-              ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-              ConnectedServiceNameARM: 'MyServicePrincipleConn'
-              ManageState: true
-              SpecifyStorageAccount: true
-              StorageAccountResourceGroup: 'terra-state-stor-rg'
-              StorageAccountRM: 'terrastorr'
-              StorageContainerName: 'terracontainer'
-            env:
-              ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
-              SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
-              CLIENT_ID:       $(CLIENT_ID)
-              CLIENT_SECRET:   $(CLIENT_SECRET)
-              TENANT_ID:       $(TENANT_ID)
+                azureSubscription: 'MyServicePrincipleConn'
+                scriptType: 'pscore'
+                scriptLocation: 'inlineScript'
+                inlineScript: 'az login --service-principal --username $(CLIENT_ID) --password $(CLIENT_SECRET) --tenant $(TENANT_ID)'
+                useGlobalConfig: true
+                workingDirectory: '$(System.DefaultWorkingDirectory)'
+            displayName: MSI and Terraform plan
+
+          - bash: terraform plan
+          
+          
+          # - bash: export ARM_USE_MSI=true ARM_TENANT_ID=$(TENANT_ID)|
+          #         az login --identity --username $(MSI)
+          #         az login --service-principal --username <APP_ID> --password <PASSWORD> --tenant <TENANT_ID>
+          #         terraform plan
+            
+          
+
+
+          # - task: Terraform@2
+          #   inputs:
+          #     TemplatePath: $(System.DefaultWorkingDirectory)
+          #     Arguments: 'plan'
+          #     InstallTerraform: true
+          #     UseAzureSub: true
+          #     ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
+          #     ConnectedServiceNameARM: 'MyServicePrincipleConn'
+          #     ManageState: true
+          #     SpecifyStorageAccount: true
+          #     StorageAccountResourceGroup: 'terra-state-stor-rg'
+          #     StorageAccountRM: 'terrastorr'
+          #     StorageContainerName: 'terracontainer'
+          #   env:
+          #     ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+          #     ARM_CLIENT_ID:       $(CLIENT_ID)
+          #     ARM_CLIENT_SECRET:   $(CLIENT_SECRET)
+          #     ARM_TENANT_ID:       $(TENANT_ID)
+              
+          # - task: TerraformCLI@0
+          #   displayName: Plan Terraform
+          #   env:
+          #     ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
+          #   inputs:
+          #     command: 'plan'
+          #     workingDirectory: '$(System.DefaultWorkingDirectory)'
+          #     # commandOptions: '-backend-config=arm_subscription_id=$(SUBSCRIPTION_ID) -backend-config=arm_client_id=$(CLIENT_ID) -backend-config=arm_client_secret=$(CLIENT_SECRET) -backend-config=arm_tenant_id=$(TENANT_ID)'
+          #     backendType: 'selfConfigured'
           
 
       
@@ -151,7 +182,7 @@ stages:
     jobs:
       - job: apply
         pool:
-          vmImage: 'windows-latest'
+          vmImage: 'ubuntu-latest'
         steps:
           - task: TerraformInstaller@0
             inputs:
@@ -169,10 +200,10 @@ stages:
             displayName: Apply Terrafirm Deployment
             env:
               ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
-              SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
-              CLIENT_ID:       $(CLIENT_ID)
-              CLIENT_SECRET:   $(CLIENT_SECRET)
-              TENANT_ID:       $(TENANT_ID)
+              ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+              ARM_CLIENT_ID:       $(CLIENT_ID)
+              ARM_CLIENT_SECRET:   $(CLIENT_SECRET)
+              ARM_TENANT_ID:       $(TENANT_ID)
             inputs:
               command: 'apply'
               workingDirectory: '$(System.DefaultWorkingDirectory)'
