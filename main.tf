@@ -7,7 +7,6 @@ terraform {
   backend "azurerm" {
 
     use_msi = true
-    tenant_id = var.azure_backend_msi
   }
 }
 
