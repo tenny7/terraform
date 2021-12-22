@@ -121,12 +121,15 @@ stages:
                          az login
                          az account list
                          az account set --subscription="$(SUBSCRIPTION_ID)"
-                         az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/$(SUBSCRIPTION_ID)"
                          az login --service-principal -u $(CLIENT_ID) -p $(CLIENT_SECRET) --tenant $(TENANT_ID)
-
                 useGlobalConfig: true
                 workingDirectory: '$(System.DefaultWorkingDirectory)'
             displayName: Az Cli Task Terraform plan
+            env:
+              ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+              ARM_CLIENT_ID:       $(CLIENT_ID)
+              ARM_CLIENT_SECRET:   $(CLIENT_SECRET)
+              ARM_TENANT_ID:       $(TENANT_ID)
 
           - bash: terraform plan
           
