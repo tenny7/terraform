@@ -122,7 +122,7 @@ stages:
           #       useGlobalConfig: true
           #       workingDirectory: '$(System.DefaultWorkingDirectory)'
           #   displayName: Az Cli Task Terraform plan
-          - bash: $ev grep | ARM
+          - bash: env | grep ARM
           - task: AzureCLI@2
             displayName: Terraform Plan
             inputs:
