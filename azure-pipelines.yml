@@ -122,7 +122,7 @@ stages:
           #       useGlobalConfig: true
           #       workingDirectory: '$(System.DefaultWorkingDirectory)'
           #   displayName: Az Cli Task Terraform plan
-          
+          - bash: $ev grep | ARM
           - task: AzureCLI@2
             displayName: Terraform Plan
             inputs:
@@ -130,7 +130,11 @@ stages:
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: 'terraform plan'
-          
+            env:
+                ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
+                ARM_CLIENT_ID:       $(CLIENT_ID)
+                ARM_CLIENT_SECRET:   $(CLIENT_SECRET)
+                ARM_TENANT_ID:       $(TENANT_ID)
           
           
           # - bash: export ARM_USE_MSI=true ARM_TENANT_ID=$(TENANT_ID)|
