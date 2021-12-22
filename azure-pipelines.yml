@@ -8,7 +8,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 resources:
   - repo: self
@@ -23,7 +23,7 @@ stages:
       - job: Build
         displayName: Build
         pool:
-          vmImage: 'windows-latest'
+          vmImage: 'ubuntu-latest'
         
         steps:
           - task: UseDotNet@2
@@ -64,7 +64,7 @@ stages:
       - job:
         displayName: Provision
         pool:
-            vmImage: 'windows-latest'
+            vmImage: 'ubuntu-latest'
         steps:
           - task: TerraformInstaller@0
             inputs:
@@ -96,7 +96,7 @@ stages:
     jobs:
       - job: plan
         pool:
-          vmImage: 'windows-latest'
+          vmImage: 'ubuntu-latest'
         steps:
           - task: TerraformInstaller@0
             inputs:
@@ -112,10 +112,24 @@ stages:
               commandOptions: '-backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
               backendType: 'selfConfigured'
           
-          - bash: export ARM_USE_MSI=true ARM_TENANT_ID=$(TENANT_ID)|
-                  az login --identity --username $(MSI)
-                  terraform plan
+          - task: AzureCLI@2
+            inputs:
+                azureSubscription: 'MyServicePrincipleConn'
+                scriptType: 'pscore'
+                scriptLocation: 'inlineScript'
+                inlineScript: 'az login --service-principal --username $(CLIENT_ID) --password $(CLIENT_SECRET) --tenant $(TENANT_ID)'
+                useGlobalConfig: true
+                workingDirectory: '$(System.DefaultWorkingDirectory)'
             displayName: MSI and Terraform plan
+
+          - bash: terraform plan
+          
+          
+          # - bash: export ARM_USE_MSI=true ARM_TENANT_ID=$(TENANT_ID)|
+          #         az login --identity --username $(MSI)
+          #         az login --service-principal --username <APP_ID> --password <PASSWORD> --tenant <TENANT_ID>
+          #         terraform plan
+            
           
 
 
@@ -169,7 +183,7 @@ stages:
     jobs:
       - job: apply
         pool:
-          vmImage: 'windows-latest'
+          vmImage: 'ubuntu-latest'
         steps:
           - task: TerraformInstaller@0
             inputs:
