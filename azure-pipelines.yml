@@ -85,10 +85,10 @@ stages:
             displayName: Init Terraform Deployment
             env:
               ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
-              ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
-              ARM_CLIENT_ID:       $(CLIENT_ID)
-              ARM_CLIENT_SECRET:   $(CLIENT_SECRET)
-              ARM_TENANT_ID:       $(TENANT_ID)
+              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+              ARM_CLIENT_ID:       $(ARM_CLIENT_ID)
+              ARM_CLIENT_SECRET:   $(ARM_CLIENT_SECRET)
+              ARM_TENANT_ID:       $(ARM_TENANT_ID)
      
                       
   - stage: Plan
@@ -131,10 +131,10 @@ stages:
               scriptLocation: 'inlineScript'
               inlineScript: 'terraform plan'
             env:
-                ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
-                ARM_CLIENT_ID:       $(CLIENT_ID)
-                ARM_CLIENT_SECRET:   $(CLIENT_SECRET)
-                ARM_TENANT_ID:       $(TENANT_ID)
+                ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+                ARM_CLIENT_ID:       $(ARM_CLIENT_ID)
+                ARM_CLIENT_SECRET:   $(ARM_CLIENT_SECRET)
+                ARM_TENANT_ID:       $(ARM_TENANT_ID)
           
           
           # - bash: export ARM_USE_MSI=true ARM_TENANT_ID=$(TENANT_ID)|
@@ -213,10 +213,10 @@ stages:
             displayName: Apply Terrafirm Deployment
             env:
               ARM_SAS_TOKEN: $(ARM_SAS_TOKEN)
-              ARM_SUBSCRIPTION_ID: $(SUBSCRIPTION_ID)
-              ARM_CLIENT_ID:       $(CLIENT_ID)
-              ARM_CLIENT_SECRET:   $(CLIENT_SECRET)
-              ARM_TENANT_ID:       $(TENANT_ID)
+              ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+              ARM_CLIENT_ID:       $(ARM_CLIENT_ID)
+              ARM_CLIENT_SECRET:   $(ARM_CLIENT_SECRET)
+              ARM_TENANT_ID:       $(ARM_TENANT_ID)
             inputs:
               command: 'apply'
               workingDirectory: '$(System.DefaultWorkingDirectory)'
