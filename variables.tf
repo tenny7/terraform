@@ -1,4 +1,9 @@
 # resource group variables
+variable = "azure_backend_msi" {
+    type = string
+    default = "8624bf49-5940-421d-941f-7237391c6adf"
+}
+
 variable "azure_rg_name" {
     type = string
     default = "devv_weu_rg"
