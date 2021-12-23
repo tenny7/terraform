@@ -131,13 +131,17 @@ stages:
             inputs:
               TemplatePath: '$(System.DefaultWorkingDirectory)'
               Arguments: 'plan'
-              InitArguments: '-backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
+              # InitArguments: '-backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
               InstallTerraform: true
               UseAzureSub: true
               ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
               ConnectedServiceNameARM: 'Azure-SPN-Connection'
               ManageState: true
               SpecifyStorageAccount: false
+            env:
+                RESOURCE_GROUP_NAME: $(ARM_RESOURCE_GROUP_NAME)
+                STORAGE_ACCOUNT_NAME: $(STORAGE_ACCOUNT_NAME)
+                CONTAINER_NAME:   $(CONTAINER_NAME)
               
             
 
