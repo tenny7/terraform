@@ -112,19 +112,10 @@ stages:
               commandOptions: '-backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
               backendType: 'selfConfigured'
           
-          # - task: AzureCLI@2
-          #   inputs:
-          #       azureSubscription: 'MyServicePrincipleConn'
-          #       scriptType: 'bash'
-          #       scriptLocation: 'inlineScript'
-          #       inlineScript: |
-          #                terraform plan
-          #       useGlobalConfig: true
-          #       workingDirectory: '$(System.DefaultWorkingDirectory)'
-          #   displayName: Az Cli Task Terraform plan
+      
           - bash: env | grep ARM
           - task: AzureCLI@2
-            displayName: Terraform Plan
+            displayName: Access Azure Storage for State
             inputs:
               azureSubscription: 'Azure-SPN-Connection'
               scriptType: 'bash'
@@ -132,6 +123,7 @@ stages:
               inlineScript: |
                      az account set --subscription $(ARM_SUBSCRIPTION_ID)
                      export ARM_ACCESS_KEY=$(az keyvault secret show --name terraform-backend-key --vault-name mysecrVault --query value -o tsv)
+                     terraform plan
             env:
                 ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
                 ARM_CLIENT_ID:       $(ARM_CLIENT_ID)
