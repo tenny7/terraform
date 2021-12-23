@@ -129,7 +129,9 @@ stages:
               azureSubscription: 'Azure-SPN-Connection'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
-              inlineScript: export ARM_ACCESS_KEY=$(az keyvault secret show --name terraform-backend-key --vault-name myKeyVault --query value -o tsv)
+              inlineScript: |
+                     az account set --subscription $(ARM_SUBSCRIPTION_ID)
+                     export ARM_ACCESS_KEY=$(az keyvault secret show --name terraform-backend-key --vault-name mysecrVault --query value -o tsv)
             env:
                 ARM_ACCESS_KEY: $(ACCOUNT_KEY)
                 ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
