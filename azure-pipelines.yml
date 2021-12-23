@@ -126,16 +126,19 @@ stages:
                 ARM_CLIENT_ID:       $(ARM_CLIENT_ID)
                 ARM_CLIENT_SECRET:   $(ARM_CLIENT_SECRET)
                 ARM_TENANT_ID:       $(ARM_TENANT_ID)
-          - task: TerraformCLI@0
-            displayName: Terraform Plan
-            env:
-                ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-                ARM_CLIENT_ID:       $(ARM_CLIENT_ID)
-                ARM_CLIENT_SECRET:   $(ARM_CLIENT_SECRET)
-                ARM_TENANT_ID:       $(ARM_TENANT_ID)
+            
+          - task: Terraform@2
             inputs:
-              command: 'plan'
-              workingDirectory: '$(System.DefaultWorkingDirectory)'
+              TemplatePath: '$(System.DefaultWorkingDirectory)'
+              Arguments: 'plan'
+              InstallTerraform: true
+              UseAzureSub: true
+              ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
+              ConnectedServiceNameARM: 'Azure-SPN-Connection'
+              ManageState: true
+              SpecifyStorageAccount: false
+            
+
           
           
           # - bash: export ARM_USE_MSI=true ARM_TENANT_ID=$(TENANT_ID)|
