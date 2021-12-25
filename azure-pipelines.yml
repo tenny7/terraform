@@ -131,14 +131,7 @@ stages:
                 ARM_CLIENT_SECRET:   $(ARM_CLIENT_SECRET)
                 ARM_TENANT_ID:       $(ARM_TENANT_ID)
             
-          - task: TerraformTaskV2@2
-            inputs:
-              provider: 'azurerm'
-              command: 'plan'
-              backendAzureRmResourceGroupName: $(ARM_RESOURCE_GROUP_NAME)
-              backendAzureRmStorageAccountName: $(STORAGE_ACCOUNT_NAME)
-              backendAzureRmContainerName: $(CONTAINER_NAME)
-              environmentServiceNameAzureRM: 'Azure-SPN-Connection'
+          
           # - task: Terraform@2
           #   inputs:
           #     TemplatePath: '$(System.DefaultWorkingDirectory)'
