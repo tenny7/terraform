@@ -131,21 +131,29 @@ stages:
                 ARM_CLIENT_SECRET:   $(ARM_CLIENT_SECRET)
                 ARM_TENANT_ID:       $(ARM_TENANT_ID)
             
-          - task: Terraform@2
+          - task: TerraformTaskV2@2
             inputs:
-              TemplatePath: '$(System.DefaultWorkingDirectory)'
-              Arguments: 'plan'
-              # InitArguments: '-backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
-              InstallTerraform: true
-              UseAzureSub: true
-              ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
-              ConnectedServiceNameARM: 'Azure-SPN-Connection'
-              ManageState: true
-              SpecifyStorageAccount: false
-            env:
-                RESOURCE_GROUP_NAME: $(ARM_RESOURCE_GROUP_NAME)
-                STORAGE_ACCOUNT_NAME: $(STORAGE_ACCOUNT_NAME)
-                CONTAINER_NAME:   $(CONTAINER_NAME)
+              provider: 'azurerm'
+              command: 'plan'
+              backendAzureRmResourceGroupName: $(ARM_RESOURCE_GROUP_NAME)
+              backendAzureRmStorageAccountName: $(STORAGE_ACCOUNT_NAME)
+              backendAzureRmContainerName: $(CONTAINER_NAME)
+              environmentServiceNameAzureRM: 'Azure-SPN-Connection'
+          # - task: Terraform@2
+          #   inputs:
+          #     TemplatePath: '$(System.DefaultWorkingDirectory)'
+          #     Arguments: 'plan'
+          #     # InitArguments: '-backend-config=storage_account_name=$(STORAGE_ACCOUNT_NAME) -backend-config=container_name=$(CONTAINER_NAME) -backend-config=key=$(KEY)'
+          #     InstallTerraform: true
+          #     UseAzureSub: true
+          #     ConnectedServiceNameSelector: 'ConnectedServiceNameARM'
+          #     ConnectedServiceNameARM: 'Azure-SPN-Connection'
+          #     ManageState: true
+          #     SpecifyStorageAccount: false
+          #   env:
+          #       RESOURCE_GROUP_NAME: $(ARM_RESOURCE_GROUP_NAME)
+          #       STORAGE_ACCOUNT_NAME: $(STORAGE_ACCOUNT_NAME)
+          #       CONTAINER_NAME:   $(CONTAINER_NAME)
               
             
 
