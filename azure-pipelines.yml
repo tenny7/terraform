@@ -138,7 +138,10 @@ stages:
               backendAzureRmContainerName: $(CONTAINER_NAME)
               backendAzureRmStorageAccountName: $(STORAGE_ACCOUNT_NAME)
               backendAzureRmResourceGroupName: $(ARM_RESOURCE_GROUP_NAME)
-              environmentServiceNameAzureRM: 'Azure-SPN-Connection'
+              environmentServiceNameAzureRM: 'MyServicePrincipleConn'
+              # environmentServiceNameAzureRM: 'Azure-SPN-Connection'
+             
+          
             
           
           # - task: Terraform@2
@@ -242,7 +245,7 @@ stages:
               backendAzureRmContainerName: $(CONTAINER_NAME)
               backendAzureRmStorageAccountName: $(STORAGE_ACCOUNT_NAME)
               backendAzureRmResourceGroupName: $(ARM_RESOURCE_GROUP_NAME)
-              environmentServiceNameAzureRM: 'Azure-SPN-Connection'
+              environmentServiceNameAzureRM: 'MyServicePrincipleConn'
         
             
           # - task: TerraformCLI@0
