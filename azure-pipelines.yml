@@ -124,6 +124,7 @@ stages:
               backendAzureRmStorageAccountName: $(STORAGE_ACCOUNT_NAME)
               backendAzureRmResourceGroupName: $(ARM_RESOURCE_GROUP_NAME)
               environmentServiceNameAzureRM: 'MyServicePrincipleConn'
+              backendAzureRmKey: terraform.tfstate
               # environmentServiceNameAzureRM: 'Azure-SPN-Connection'
     
 
@@ -169,6 +170,7 @@ stages:
               backendAzureRmStorageAccountName: $(STORAGE_ACCOUNT_NAME)
               backendAzureRmResourceGroupName: $(ARM_RESOURCE_GROUP_NAME)
               environmentServiceNameAzureRM: 'MyServicePrincipleConn'
+              backendAzureRmKey: terraform.tfstate
         
             
             
