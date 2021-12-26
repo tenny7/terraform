@@ -238,11 +238,12 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'apply'
+              commandOptions: '-auto-approve'
               backendAzureRmContainerName: $(CONTAINER_NAME)
               backendAzureRmStorageAccountName: $(STORAGE_ACCOUNT_NAME)
               backendAzureRmResourceGroupName: $(ARM_RESOURCE_GROUP_NAME)
               environmentServiceNameAzureRM: 'Azure-SPN-Connection'
-         
+        
             
           # - task: TerraformCLI@0
           #   displayName: Apply Terrafirm Deployment
