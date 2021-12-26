@@ -2,7 +2,7 @@
 
 variable "azure_rg_name" {
     type = string
-    default = "devv_weu_rg"
+    default = "dev_weu_rg"
 }
 
 variable "azure_rg_location" {
