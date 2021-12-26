@@ -116,20 +116,20 @@ stages:
               backendType: 'selfConfigured'
               
           
-          - task: AzureCLI@2
-            displayName: Access Azure Storage for State
-            inputs:
-              azureSubscription: 'Azure-SPN-Connection'
-              scriptType: 'bash'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                     az account set --subscription $(ARM_SUBSCRIPTION_ID)
-                     export ARM_ACCESS_KEY=$(az keyvault secret show --name terraform-backend-key --vault-name mysecrVault --query value -o tsv)
-            env:
-                ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
-                ARM_CLIENT_ID:       $(ARM_CLIENT_ID)
-                ARM_CLIENT_SECRET:   $(ARM_CLIENT_SECRET)
-                ARM_TENANT_ID:       $(ARM_TENANT_ID)
+          # - task: AzureCLI@2
+          #   displayName: Access Azure Storage for State
+          #   inputs:
+          #     azureSubscription: 'Azure-SPN-Connection'
+          #     scriptType: 'bash'
+          #     scriptLocation: 'inlineScript'
+          #     inlineScript: |
+          #            az account set --subscription $(ARM_SUBSCRIPTION_ID)
+          #            export ARM_ACCESS_KEY=$(az keyvault secret show --name terraform-backend-key --vault-name mysecrVault --query value -o tsv)
+          #   env:
+          #       ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+          #       ARM_CLIENT_ID:       $(ARM_CLIENT_ID)
+          #       ARM_CLIENT_SECRET:   $(ARM_CLIENT_SECRET)
+          #       ARM_TENANT_ID:       $(ARM_TENANT_ID)
 
           - task: TerraformTaskV2@2
             inputs:
